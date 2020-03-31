@@ -23,7 +23,7 @@ export class PlacesService {
     new Place(
       'p3',
       'Itu',
-      'Terra da capivara',
+      'Cidade grande',
       'https://itu.sp.gov.br/wp-content/uploads/2017/03/orelhao-300x300.jpg',
       70.90
     )
