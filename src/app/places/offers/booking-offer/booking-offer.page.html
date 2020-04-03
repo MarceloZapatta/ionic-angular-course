@@ -1,9 +1,14 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>booking-offer</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/places/tabs/offers"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Reservar oferta</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
-
+<ion-content padding>
+  <ion-button color="primary" margin (click)="onBookOffer()">
+    Reservar
+  </ion-button>
 </ion-content>
