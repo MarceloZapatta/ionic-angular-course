@@ -3,12 +3,16 @@
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/places/tabs/offers"></ion-back-button>
     </ion-buttons>
-    <ion-title>Reservar oferta</ion-title>
+    <ion-title>{{ place.title }}</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content padding>
-  <ion-button color="primary" margin (click)="onBookOffer()">
-    Reservar
+<ion-content class="ion-padding">
+  <ion-button
+    color="primary"
+    class="ion-margin"
+    [routerLink]="['/', 'places', 'tabs', 'offers', 'edit', place.id]"
+  >
+    Editar
   </ion-button>
 </ion-content>

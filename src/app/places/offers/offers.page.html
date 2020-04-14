@@ -1,58 +1,31 @@
 <ion-header>
   <ion-toolbar>
     <ion-title>Ofertas</ion-title>
+    <ion-buttons slot="primary">
+      <ion-button routerLink="/places/tabs/offers/new" >
+        <ion-icon name="add" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content padding>
+<ion-content class="ion-padding">
   <ion-grid>
     <ion-row>
-      <ion-col size="12" size-sm="8" offset-sm="2" text-center>
-        <ion-card>
-          <ion-card-header>
-            <ion-card-title>
-              {{ loadedOffers[0].title }}
-            </ion-card-title>
-            <ion-card-subtitle>
-              {{ loadedOffers[0].place.title }} - {{ loadedOffers[0].place.price | currency:'BRL':'R$ ' }} / Noite
-            </ion-card-subtitle>
-          </ion-card-header>
-          <ion-img [src]="loadedOffers[0].imageUrl"></ion-img>
-          <ion-card-content>
-            <p>{{ loadedOffers[0].description }}</p>
-          </ion-card-content>
-          <div>
-            <ion-button
-              fill="clear"
-              color="primary"
-              [routerLink]="['/', 'places', 'tabs', 'offers', 'booking']"
-            >
-              Reservar
-            </ion-button>
-          </div>
-        </ion-card>
-      </ion-col>
-    </ion-row>
-    <ion-row>
-      <ion-col size="12" size-sm="8" offset-sm="2" text-center>
+      <ion-col size="12" size-sm="8" offset-sm="2" class="ion-text-center">
         <ion-list>
           <ion-item
-            *ngFor="let offer of loadedOffers.slice(1)"
-            [routerLink]="['/', 'places', 'tabs', 'offers', 'booking']"
+            *ngFor="let offer of loadedOffers"
+            [routerLink]="['/', 'places', 'tabs', 'offers', 'book', offer.id]"
             detail
           >
             <ion-thumbnail slot="start">
               <ion-img [src]="offer.imageUrl"></ion-img>
             </ion-thumbnail>
             <ion-label>
-              <span>
-                <h2>
-                  {{ offer.title }}
-                </h2>
-                <ion-label color="primary">
-                  {{ offer.place.title }}
-                </ion-label>
-              </span>
+              <h2>
+                {{ offer.title }}
+              </h2>
               <p>
                 {{ offer.description }}
               </p>

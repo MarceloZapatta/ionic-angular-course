@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Offer } from './offers.model';
-import { OffersService } from './offers.service';
+import { PlacesService } from '../places.service';
+import { Place } from '../places.model';
 
 @Component({
   selector: 'app-offers',
@@ -8,11 +8,11 @@ import { OffersService } from './offers.service';
   styleUrls: ['./offers.page.scss']
 })
 export class OffersPage implements OnInit {
-  private loadedOffers: Offer[];
+  public loadedOffers: Place[];
 
-  constructor(private offersService: OffersService) {}
+  constructor(private placesService: PlacesService) {}
 
   ngOnInit() {
-    this.loadedOffers = this.offersService.offers;
+    this.loadedOffers = this.placesService.places;
   }
 }
