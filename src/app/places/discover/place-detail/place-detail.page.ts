@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { NavController } from '@ionic/angular';
 import { PlacesService } from '../../places.service';
 import { Place } from '../../places.model';
@@ -16,7 +16,7 @@ export class PlaceDetailPage implements OnInit {
   ngOnInit() {
     this.activatedRoute.paramMap.subscribe(paramMap => {
       if (!paramMap.has('placeId')) {
-        this.navController.navigateBack('/places/tabs/offers');
+        this.navController.navigateBack('/places/tabs/discover');
         return;
       }
 
