@@ -52,7 +52,11 @@
             </ion-thumbnail>
             <ion-label>
               <h2>{{ place.title }}</h2>
-              <p>{{ place.description }}</p>
+              <p>
+                <ion-text color="danger">
+                  {{ place.description }}
+                </ion-text>
+              </p>
             </ion-label>
           </ion-item>
         </ion-list>
