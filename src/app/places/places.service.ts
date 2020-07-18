@@ -26,7 +26,7 @@ export class PlacesService {
       "Cidade grande",
       "https://itu.sp.gov.br/wp-content/uploads/2017/03/orelhao-300x300.jpg",
       70.9
-    ),
+    )
   ];
 
   get places() {
