@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>Autenticação</ion-title>
+    <ion-title>{{ isLogin ? 'Entrar' :  'Registrar-se' }}</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -34,7 +34,7 @@
               ngModel
               name="password"
               required
-              minLength="6"
+              minlength="6"
               #passwordCtrl="ngModel"
             ></ion-input>
           </ion-item>
@@ -52,8 +52,9 @@
             class="ion-color-primary"
             fill="clear"
             expand="block"
+            (click)="onSwitchAuthMode()"
           >
-            Switch to login
+            Alterar para {{ isLogin ? 'Registrar-se' : 'Entrar' }}
           </ion-button>
           <ion-button
             type="submit"
@@ -62,7 +63,7 @@
             expand="block"
             [disabled]="!f.valid"
           >
-            Login
+            {{ isLogin ?  'Entrar' : 'Registrar-se' }}
           </ion-button>
         </ion-col>
       </ion-row>
