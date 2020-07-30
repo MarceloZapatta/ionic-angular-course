@@ -6,6 +6,11 @@
       ></ion-back-button>
     </ion-buttons>
     <ion-title>Editar Oferta</ion-title>
+    <ion-buttons slot="primary">
+      <ion-button (click)="this.save()" [disabled]="!form.valid">
+        <ion-icon name="checkmark" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
@@ -30,10 +35,6 @@
             <ion-label position="floating">URL da Imagem</ion-label>
             <ion-input formControlName="imageUrl"></ion-input>
           </ion-item>
-
-          <ion-button color="primary" class="ion-margin" (click)="this.save()">
-            Salvar
-          </ion-button>
         </ion-col>
       </ion-row>
     </ion-grid>
