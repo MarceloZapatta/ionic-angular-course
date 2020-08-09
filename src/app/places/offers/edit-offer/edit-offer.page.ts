@@ -1,18 +1,20 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Place } from '../../places.model';
 import { ActivatedRoute } from '@angular/router';
 import { NavController } from '@ionic/angular';
 import { PlacesService } from '../../places.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-edit-offer',
   templateUrl: './edit-offer.page.html',
   styleUrls: ['./edit-offer.page.scss'],
 })
-export class EditOfferPage implements OnInit {
+export class EditOfferPage implements OnInit, OnDestroy {
   place: Place;
   form: FormGroup;
+  private placeSubscription: Subscription;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -27,7 +29,11 @@ export class EditOfferPage implements OnInit {
         return;
       }
 
-      this.place = this.placesService.getPlace(paramMap.get('placeId'));
+      this.placeSubscription = this.placesService
+        .getPlace(paramMap.get('placeId'))
+        .subscribe((placeFinded) => {
+          this.place = placeFinded;
+        });
 
       this.form = new FormGroup({
         title: new FormControl(this.place.title, {
@@ -48,6 +54,10 @@ export class EditOfferPage implements OnInit {
         }),
       });
     });
+  }
+
+  ngOnDestroy() {
+    this.placeSubscription.unsubscribe();
   }
 
   onSaveOffer() {
