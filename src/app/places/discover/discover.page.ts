@@ -16,6 +16,7 @@ export class DiscoverPage implements OnDestroy {
   listedLoadedPlaces: Place[];
   relevantPlaces: Place[];
   private placesSubscription: Subscription;
+  private filter = 'all';
 
   constructor(
     private placesService: PlacesService,
@@ -28,6 +29,7 @@ export class DiscoverPage implements OnDestroy {
       this.loadedPlaces = places;
       this.relevantPlaces = this.loadedPlaces;
       this.listedLoadedPlaces = this.relevantPlaces.slice(1);
+      this.onFilterUpdate(this.filter);
     });
   }
 
@@ -35,16 +37,11 @@ export class DiscoverPage implements OnDestroy {
     this.menuController.toggle();
   }
 
-  onFilterUpdate(event: CustomEvent<SegmentChangeEventDetail>) {
-    if (event.detail.value === 'all') {
-      this.relevantPlaces = this.loadedPlaces;
-      this.listedLoadedPlaces = this.relevantPlaces.slice(1);
-    } else {
-      this.relevantPlaces = this.loadedPlaces.filter(
-        place => place.userId !== this.authService.userId
-      );
-      this.listedLoadedPlaces = this.relevantPlaces.slice(1);
-    }
+  onFilterUpdate(filter: string) {
+    const isShown = place => filter === 'all' || place.userId !== this.authService.userId;
+    this.relevantPlaces = this.loadedPlaces.filter(isShown);
+    this.listedLoadedPlaces = this.relevantPlaces.slice(1);
+    this.filter = filter;
   }
 
   ngOnDestroy() {
