@@ -24,7 +24,7 @@
             {{ place.price }}
           </ion-label>
         </ion-item>
-        <ion-button color="primary" class="ion-margin" (click)="onBookPlace()">
+        <ion-button color="primary" class="ion-margin" (click)="onBookPlace()" *ngIf="isBookable">
           Reservar
         </ion-button>
       </ion-col>
