@@ -1,0 +1,10 @@
+{
+  "/api": {
+    "target": "https://ionic-angular-course-d6e8e.firebaseio.com/",
+    "secure": false,
+    "changeOrigin": true,
+    "pathRewrite": {
+        "^/api": ""
+    }
+  }
+}

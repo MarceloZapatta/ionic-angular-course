@@ -46,14 +46,6 @@ export class EditOfferPage implements OnInit, OnDestroy {
           updateOn: 'blur',
           validators: [Validators.required],
         }),
-        price: new FormControl(this.place.price, {
-          updateOn: 'blur',
-          validators: [Validators.required],
-        }),
-        imageUrl: new FormControl(this.place.imageUrl, {
-          updateOn: 'blur',
-          validators: [Validators.required],
-        }),
       });
     });
   }
