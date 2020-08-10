@@ -4,11 +4,13 @@ import {
   NavController,
   ModalController,
   ActionSheetController,
+  LoadingController,
 } from '@ionic/angular';
 import { PlacesService } from '../../places.service';
 import { Place } from '../../places.model';
 import { CreateBookingComponent } from '../../../bookings/create-booking/create-booking.component';
 import { Subscription } from 'rxjs';
+import { BookingService } from 'src/app/bookings/booking.service';
 
 @Component({
   selector: 'app-place-detail',
@@ -24,7 +26,9 @@ export class PlaceDetailPage implements OnInit, OnDestroy {
     private navController: NavController,
     private placesService: PlacesService,
     private modalController: ModalController,
-    private actionControoller: ActionSheetController
+    private actionControoller: ActionSheetController,
+    private bookingService: BookingService,
+    private loadingController: LoadingController
   ) {}
 
   ngOnInit() {
@@ -88,7 +92,26 @@ export class PlaceDetailPage implements OnInit, OnDestroy {
       })
       .then((resultData) => {
         if (resultData.role === 'confirm') {
-          console.log(resultData);
+          this.loadingController
+            .create({ message: 'Reservando lugar...' })
+            .then((loadingElement) => {
+              loadingElement.present();
+              let data = resultData.data.bookingData;
+              this.bookingService
+                .addBooking(
+                  this.place.id,
+                  this.place.title,
+                  this.place.imageUrl,
+                  data.firstName,
+                  data.lastName,
+                  data.numberGuests,
+                  data.startDate,
+                  data.endDate
+                )
+                .subscribe(() => {
+                  loadingElement.dismiss();
+                });
+            });
         }
       });
   }
