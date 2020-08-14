@@ -14,6 +14,8 @@ import { Subscription } from 'rxjs';
 export class EditOfferPage implements OnInit, OnDestroy {
   place: Place;
   form: FormGroup;
+  isLoading = false;
+  placeId: string;
   private placeSubscription: Subscription;
 
   constructor(
@@ -31,22 +33,28 @@ export class EditOfferPage implements OnInit, OnDestroy {
         return;
       }
 
+      this.placeId = paramMap.get('placeId');
+
+      this.isLoading = true;
+
       this.placeSubscription = this.placesService
         .getPlace(paramMap.get('placeId'))
         .subscribe((placeFinded) => {
           this.place = placeFinded;
-        });
 
-      this.form = new FormGroup({
-        title: new FormControl(this.place.title, {
-          updateOn: 'blur',
-          validators: [Validators.required],
-        }),
-        description: new FormControl(this.place.description, {
-          updateOn: 'blur',
-          validators: [Validators.required],
-        }),
-      });
+          this.form = new FormGroup({
+            title: new FormControl(this.place.title, {
+              updateOn: 'blur',
+              validators: [Validators.required],
+            }),
+            description: new FormControl(this.place.description, {
+              updateOn: 'blur',
+              validators: [Validators.required],
+            }),
+          });
+
+          this.isLoading = false;
+        });
     });
   }
 
@@ -54,25 +62,31 @@ export class EditOfferPage implements OnInit, OnDestroy {
     if (!this.form.valid) {
       return;
     }
-    this.loadingController.create({
-      message: 'Updating places...'
-    }).then(loadingElement => {
-      loadingElement.present();
-      this.placesService.updatePlace(
+    this.loadingController
+      .create({
+        message: 'Updating places...',
+      })
+      .then((loadingElement) => {
+        loadingElement.present();
+        this.placesService
+          .updatePlace(
+            this.place.id,
+            this.form.value.title,
+            this.form.value.description
+          )
+          .subscribe(() => {
+            loadingElement.dismiss();
+            this.form.reset();
+            this.router.navigate(['/places/tabs/offers']);
+          });
+      });
+    this.placesService
+      .updatePlace(
         this.place.id,
         this.form.value.title,
         this.form.value.description
-      ).subscribe(() => {
-        loadingElement.dismiss();
-        this.form.reset();
-        this.router.navigate(['/places/tabs/offers']);
-      });
-    })
-    this.placesService.updatePlace(
-      this.place.id,
-      this.form.value.title,
-      this.form.value.description
-    ).subscribe();
+      )
+      .subscribe();
   }
 
   ngOnDestroy() {

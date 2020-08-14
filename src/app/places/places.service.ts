@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Place } from './places.model';
 import { AuthService } from '../auth/auth.service';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, of } from 'rxjs';
 import { take, map, tap, delay, switchMap } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 
@@ -63,6 +63,21 @@ export class PlacesService {
   }
 
   getPlace(id: string) {
+    return this.httpClient.get(`/api/places/${id}.json`).pipe(
+      map<PlaceData, Place>((response) => {
+        return new Place(
+          id,
+          response.title,
+          response.description,
+          response.imageUrl,
+          response.price,
+          new Date(response.availableFrom),
+          new Date(response.availableTo),
+          response.userId
+        );
+      })
+    );
+
     return this.places.pipe(
       take(1),
       map((places) => {
@@ -114,6 +129,13 @@ export class PlacesService {
 
     return this.places.pipe(
       take(1),
+      switchMap((places) => {
+        if (!places || places.length <= 0) {
+          return this.fetchPlaces();
+        } else {
+          return of(places);
+        }
+      }),
       switchMap((places) => {
         const updatedPlaceIndex = places.findIndex((p) => p.id === placeId);
         updatedPlaces = [...places];
