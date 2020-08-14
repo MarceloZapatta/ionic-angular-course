@@ -109,11 +109,13 @@ export class BookingService {
   }
 
   cancelBooking(bookingId: string) {
-    return this.bookings.pipe(
+    return this.httpClient.delete(`/api/bookings/${bookingId}.json`).pipe(
+      switchMap(() => {
+        return this.bookings;
+      }),
       take(1),
-      delay(1000),
       tap((bookings) => {
-        this._bookins.next(bookings.filter((b) => b.id !== bookingId));
+        return this._bookins.next(bookings.filter((b) => b.id !== bookingId));
       })
     );
   }
