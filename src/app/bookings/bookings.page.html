@@ -13,7 +13,14 @@
       <ion-col
         size-md="6"
         offset-md="3"
-        *ngIf="!loadedBookings || loadedBookings.length <= 0"
+        class="ion-text-center ion-padding"
+        *ngIf="isLoading">
+        <ion-spinner color="primary"></ion-spinner>
+      </ion-col>
+      <ion-col
+        size-md="6"
+        offset-md="3"
+        *ngIf="!isLoading && (!loadedBookings || loadedBookings.length <= 0)"
         class="ion-text-center">
         <p>
           Nenhuma reserva encontrada.
@@ -22,7 +29,7 @@
       <ion-col
         size-md="6"
         offset-md="3"
-        *ngIf="loadedBookings && loadedBookings.length > 0"
+        *ngIf="!isLoading && loadedBookings && loadedBookings.length > 0"
       >
         <ion-list>
           <ion-item-sliding *ngFor="let booking of loadedBookings" #itemSliding>

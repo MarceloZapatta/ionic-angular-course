@@ -77,13 +77,6 @@ export class PlacesService {
         );
       })
     );
-
-    return this.places.pipe(
-      take(1),
-      map((places) => {
-        return { ...places.find((p) => p.id === id) };
-      })
-    );
   }
 
   addPlace(
@@ -105,8 +98,6 @@ export class PlacesService {
       dateTo,
       this.authService.userId
     );
-
-    console.log({ ...newPlace, id: null });
 
     return this.httpClient
       .post<{ name: string }>('/api/places.json', { ...newPlace, id: null })
