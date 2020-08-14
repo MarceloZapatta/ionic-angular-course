@@ -1,7 +1,11 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Place } from '../../places.model';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NavController, LoadingController } from '@ionic/angular';
+import {
+  NavController,
+  LoadingController,
+  AlertController,
+} from '@ionic/angular';
 import { PlacesService } from '../../places.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
@@ -23,7 +27,8 @@ export class EditOfferPage implements OnInit, OnDestroy {
     private navController: NavController,
     private placesService: PlacesService,
     private router: Router,
-    private loadingController: LoadingController
+    private loadingController: LoadingController,
+    private alertController: AlertController
   ) {}
 
   ngOnInit() {
@@ -39,22 +44,43 @@ export class EditOfferPage implements OnInit, OnDestroy {
 
       this.placeSubscription = this.placesService
         .getPlace(paramMap.get('placeId'))
-        .subscribe((placeFinded) => {
-          this.place = placeFinded;
+        .subscribe(
+          (placeFinded) => {
+            this.place = placeFinded;
 
-          this.form = new FormGroup({
-            title: new FormControl(this.place.title, {
-              updateOn: 'blur',
-              validators: [Validators.required],
-            }),
-            description: new FormControl(this.place.description, {
-              updateOn: 'blur',
-              validators: [Validators.required],
-            }),
-          });
+            this.form = new FormGroup({
+              title: new FormControl(this.place.title, {
+                updateOn: 'blur',
+                validators: [Validators.required],
+              }),
+              description: new FormControl(this.place.description, {
+                updateOn: 'blur',
+                validators: [Validators.required],
+              }),
+            });
 
-          this.isLoading = false;
-        });
+            this.isLoading = false;
+          },
+          (error) => {
+            this.alertController
+              .create({
+                header: 'Um erro ocorreu',
+                message:
+                  'Lugar não pode ser encontrado. Por favor tente novamente mais tarde',
+                buttons: [
+                  {
+                    text: 'OK',
+                    handler: () => {
+                      this.router.navigate(['/places/tabs/offers']);
+                    },
+                  },
+                ],
+              })
+              .then((alertElement) => {
+                alertElement.present();
+              });
+          }
+        );
     });
   }
 
