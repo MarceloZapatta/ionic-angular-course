@@ -24,6 +24,7 @@
     "@ionic-native/status-bar": "^5.27.0",
     "@ionic/angular": "^4.7.1",
     "core-js": "^2.5.4",
+    "fs": "^0.0.1-security",
     "rxjs": "^6.6.2",
     "tslib": "^1.13.0",
     "zone.js": "~0.9.1"
@@ -42,6 +43,7 @@
     "@types/jasminewd2": "~2.0.3",
     "@types/node": "~8.9.4",
     "codelyzer": "^5.2.2",
+    "dotenv": "^8.2.0",
     "jasmine-core": "~3.4.0",
     "jasmine-spec-reporter": "~4.2.1",
     "karma": "~4.1.0",
@@ -52,7 +54,13 @@
     "protractor": "^5.4.4",
     "ts-node": "~7.0.0",
     "tslint": "~5.15.0",
-    "typescript": "~3.4.3"
+    "typescript": "~3.4.3",
+    "yargs": "^15.4.1"
   },
-  "description": "An Ionic project"
+  "description": "An Ionic project",
+  "browser": {
+    "fs": false,
+    "os": false,
+    "path": false
+  }
 }

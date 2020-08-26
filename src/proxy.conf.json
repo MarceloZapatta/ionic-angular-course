@@ -6,5 +6,13 @@
     "pathRewrite": {
         "^/api": ""
     }
+  },
+  "/api-google": {
+    "target": "https://www.google.com/maps/search/?api=1",
+    "secure": false,
+    "changeOrigin": true,
+    "pathRewrite": {
+        "^/api": ""
+    }
   }
 }
