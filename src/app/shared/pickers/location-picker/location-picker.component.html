@@ -3,6 +3,7 @@
   <ion-img
     class="location-image"
     [src]="selectedLocationImage"
+    (click)="onPickLocation()"
     *ngIf="selectedLocationImage && !isLoading"
   ></ion-img>
   <ion-button
