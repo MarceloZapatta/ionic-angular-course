@@ -53,7 +53,7 @@ export class BookingService {
     );
     return this.http
       .post<{ name: string }>(
-        'https://ionic-angular-course.firebaseio.com/bookings.json',
+        'https://ionic-angular-course-d6e8e.firebaseio.com/bookings.json',
         { ...newBooking, id: null }
       )
       .pipe(
@@ -72,7 +72,7 @@ export class BookingService {
   cancelBooking(bookingId: string) {
     return this.http
       .delete(
-        `https://ionic-angular-course.firebaseio.com/bookings/${bookingId}.json`
+        `https://ionic-angular-course-d6e8e.firebaseio.com/bookings/${bookingId}.json`
       )
       .pipe(
         switchMap(() => {
@@ -88,7 +88,7 @@ export class BookingService {
   fetchBookings() {
     return this.http
       .get<{ [key: string]: BookingData }>(
-        `https://ionic-angular-course.firebaseio.com/bookings.json?orderBy="userId"&equalTo="${
+        `https://ionic-angular-course-d6e8e.firebaseio.com/bookings.json?orderBy="userId"&equalTo="${
           this.authService.userId
         }"`
       )
