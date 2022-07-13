@@ -1,26 +1,26 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { PlacesService } from '../places.service';
-import { Place } from '../places.model';
 import { IonItemSliding } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 
+import { PlacesService } from '../places.service';
+import { Place } from '../place.model';
+
 @Component({
   selector: 'app-offers',
   templateUrl: './offers.page.html',
-  styleUrls: ['./offers.page.scss'],
+  styleUrls: ['./offers.page.scss']
 })
 export class OffersPage implements OnInit, OnDestroy {
-  public loadedOffers: Place[];
+  offers: Place[];
   isLoading = false;
-  private placesSubscription: Subscription;
+  private placesSub: Subscription;
 
   constructor(private placesService: PlacesService, private router: Router) {}
 
   ngOnInit() {
-    this.placesSubscription = this.placesService.places.subscribe((places) => {
-      console.log(places);
-      this.loadedOffers = places;
+    this.placesSub = this.placesService.places.subscribe(places => {
+      this.offers = places;
     });
   }
 
@@ -31,15 +31,15 @@ export class OffersPage implements OnInit, OnDestroy {
     });
   }
 
-  onEdit(offerId: string, itemSliding: IonItemSliding) {
-    itemSliding.close();
-
+  onEdit(offerId: string, slidingItem: IonItemSliding) {
+    slidingItem.close();
     this.router.navigate(['/', 'places', 'tabs', 'offers', 'edit', offerId]);
+    console.log('Editing item', offerId);
   }
 
   ngOnDestroy() {
-    if (this.placesSubscription) {
-      this.placesSubscription.unsubscribe();
+    if (this.placesSub) {
+      this.placesSub.unsubscribe();
     }
   }
 }

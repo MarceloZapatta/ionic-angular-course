@@ -1,60 +1,64 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { PlacesService } from '../places.service';
-import { Place } from '../places.model';
 import { MenuController } from '@ionic/angular';
 import { SegmentChangeEventDetail } from '@ionic/core';
 import { Subscription } from 'rxjs';
-import { AuthService } from 'src/app/auth/auth.service';
+
+import { PlacesService } from '../places.service';
+import { Place } from '../place.model';
+import { AuthService } from '../../auth/auth.service';
 
 @Component({
   selector: 'app-discover',
   templateUrl: './discover.page.html',
-  styleUrls: ['./discover.page.scss'],
+  styleUrls: ['./discover.page.scss']
 })
-export class DiscoverPage implements OnDestroy {
+export class DiscoverPage implements OnInit, OnDestroy {
   loadedPlaces: Place[];
   listedLoadedPlaces: Place[];
   relevantPlaces: Place[];
   isLoading = false;
-  private placesSubscription: Subscription;
-  private filter = 'all';
+  private placesSub: Subscription;
 
   constructor(
     private placesService: PlacesService,
-    private menuController: MenuController,
+    private menuCtrl: MenuController,
     private authService: AuthService
   ) {}
 
   ngOnInit() {
-    this.placesSubscription = this.placesService.places.subscribe((places) => {
+    this.placesSub = this.placesService.places.subscribe(places => {
       this.loadedPlaces = places;
       this.relevantPlaces = this.loadedPlaces;
       this.listedLoadedPlaces = this.relevantPlaces.slice(1);
-      this.onFilterUpdate(this.filter);
     });
   }
 
   ionViewWillEnter() {
     this.isLoading = true;
-
-    this.placesService.fetchPlaces().subscribe(() => (this.isLoading = false));
+    this.placesService.fetchPlaces().subscribe(() => {
+      this.isLoading = false;
+    });
   }
 
   onOpenMenu() {
-    this.menuController.toggle();
+    this.menuCtrl.toggle();
   }
 
-  onFilterUpdate(filter: string) {
-    const isShown = (place) =>
-      filter === 'all' || place.userId !== this.authService.userId;
-    this.relevantPlaces = this.loadedPlaces.filter(isShown);
-    this.listedLoadedPlaces = this.relevantPlaces.slice(1);
-    this.filter = filter;
+  onFilterUpdate(event: CustomEvent<SegmentChangeEventDetail>) {
+    if (event.detail.value === 'all') {
+      this.relevantPlaces = this.loadedPlaces;
+      this.listedLoadedPlaces = this.relevantPlaces.slice(1);
+    } else {
+      this.relevantPlaces = this.loadedPlaces.filter(
+        place => place.userId !== this.authService.userId
+      );
+      this.listedLoadedPlaces = this.relevantPlaces.slice(1);
+    }
   }
 
   ngOnDestroy() {
-    if (this.placesSubscription) {
-      this.placesSubscription.unsubscribe();
+    if (this.placesSub) {
+      this.placesSub.unsubscribe();
     }
   }
 }

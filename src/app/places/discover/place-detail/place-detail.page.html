@@ -3,42 +3,30 @@
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/places/tabs/discover"></ion-back-button>
     </ion-buttons>
-    <ion-title>{{ isLoading ? 'Carregando...' : place.title }}</ion-title>
+    <ion-title>{{ isLoading ? 'Loading...' : place.title }}</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <ion-grid class="ion-padding" *ngIf="isLoading">
-    <ion-row class="ion-padding">
-      <ion-col size-sm="6" offset-sm="3" class="ion-no-padding ion-text-center">
-        <ion-spinner color="primary"></ion-spinner>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
+  <div class="ion-text-center" *ngIf="isLoading">
+    <ion-spinner color="primary"></ion-spinner>
+  </div>
   <ion-grid class="ion-no-padding" *ngIf="!isLoading">
-    <ion-row class="ion-no-padding">
+    <ion-row>
       <ion-col size-sm="6" offset-sm="3" class="ion-no-padding">
         <ion-img [src]="place.imageUrl"></ion-img>
-        <ion-item>
-          <ion-label>Descrição</ion-label>
-          <ion-label>
-            {{ place.description }}
-          </ion-label>
-        </ion-item>
-        <ion-item>
-          <ion-label>Preço</ion-label>
-          <ion-label>
-            {{ place.price }}
-          </ion-label>
-        </ion-item>
-        <ion-button
-          color="primary"
-          class="ion-margin"
-          (click)="onBookPlace()"
-          *ngIf="isBookable"
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size-sm="6" offset-sm="3" class="ion-text-center" padding>
+        <p>{{ place.description }}</p>
+      </ion-col>
+    </ion-row>
+    <ion-row *ngIf="isBookable">
+      <ion-col size-sm="6" offset-sm="3" class="ion-text-center">
+        <ion-button color="primary" margin (click)="onBookPlace()"
+          >Book</ion-button
         >
-          Reservar
-        </ion-button>
       </ion-col>
     </ion-row>
   </ion-grid>
