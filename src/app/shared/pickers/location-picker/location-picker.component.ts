@@ -13,6 +13,9 @@ import { of } from "rxjs";
   styleUrls: ["./location-picker.component.scss"],
 })
 export class LocationPickerComponent implements OnInit {
+  selectedLocationImage: string;
+  loading: boolean = false;
+
   constructor(private modalCtrl: ModalController, private http: HttpClient) {}
 
   ngOnInit() {}
@@ -28,6 +31,7 @@ export class LocationPickerComponent implements OnInit {
             staticMapImageUrl: null,
           };
 
+          this.isLoading = true;
           this.getAddress(modalData.data.lat, modalData.data.lng)
             .pipe(
               switchMap((address) => {
@@ -39,6 +43,8 @@ export class LocationPickerComponent implements OnInit {
             )
             .subscribe((staticMapImageUrl: any) => {
               pickedLocation.staticMapImageUrl = staticMapImageUrl;
+              this.selectedLocationImage = staticMapImageUrl;
+              this.isLoading = false;
             });
         }
       });
@@ -63,9 +69,8 @@ export class LocationPickerComponent implements OnInit {
   }
 
   private getMapImage(lat: number, lng: number, zoom: number) {
-    return this.http
-      .get(`https://maps.googleapis.com/maps/api/staticmap?center=${lat},${lng}&zoom=${zoom}&size=500x300&maptype=roadmap
+    return `https://maps.googleapis.com/maps/api/staticmap?center=${lat},${lng}&zoom=${zoom}&size=500x300&maptype=roadmap
     &markers=color:blue%7Clabel:Place%7C${lat},${lng}
-    &key=${environment.googleMapsAPIKey}`);
+    &key=${environment.googleMapsAPIKey}`;
   }
 }
