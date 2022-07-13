@@ -4,18 +4,21 @@ import {
   AfterViewInit,
   ViewChild,
   ElementRef,
-  Renderer2
-} from '@angular/core';
-import { ModalController } from '@ionic/angular';
+  Renderer2,
+  OnDestroy,
+} from "@angular/core";
+import { ModalController } from "@ionic/angular";
 
-import {environment} from '../../../environments/environment';
+import { environment } from "../../../environments/environment";
 @Component({
-  selector: 'app-map-modal',
-  templateUrl: './map-modal.component.html',
-  styleUrls: ['./map-modal.component.scss']
+  selector: "app-map-modal",
+  templateUrl: "./map-modal.component.html",
+  styleUrls: ["./map-modal.component.scss"],
 })
-export class MapModalComponent implements OnInit, AfterViewInit {
-  @ViewChild('map', { static: false }) mapElementRef: ElementRef;
+export class MapModalComponent implements OnInit, AfterViewInit, OnDestroy {
+  @ViewChild("map", { static: false }) mapElementRef: ElementRef;
+  clickListener: any;
+  googleMaps: any;
 
   constructor(
     private modalCtrl: ModalController,
@@ -24,28 +27,33 @@ export class MapModalComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {}
 
+  ngOnDestroy(): void {
+    this.googleMaps.event.removeListener(this.clickListener);
+  }
+
   ngAfterViewInit() {
     this.getGoogleMaps()
-      .then(googleMaps => {
+      .then((googleMaps) => {
+        this.googleMaps = googleMaps;
         const mapEl = this.mapElementRef.nativeElement;
         const map = new googleMaps.Map(mapEl, {
           center: { lat: -34.397, lng: 150.644 },
-          zoom: 16
+          zoom: 16,
         });
 
-        googleMaps.event.addListenerOnce(map, 'idle', () => {
-          this.renderer.addClass(mapEl, 'visible');
+        googleMaps.event.addListenerOnce(map, "idle", () => {
+          this.renderer.addClass(mapEl, "visible");
         });
 
-        map.addListener('click', event => {
+        this.clickListener = map.addListener("click", (event) => {
           const selectedCoords = {
             lat: event.latLng.lat(),
-            lng: event.latLng.lng()
+            lng: event.latLng.lng(),
           };
           this.modalCtrl.dismiss(selectedCoords);
         });
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(err);
       });
   }
@@ -61,9 +69,8 @@ export class MapModalComponent implements OnInit, AfterViewInit {
       return Promise.resolve(googleModule.maps);
     }
     return new Promise((resolve, reject) => {
-      const script = document.createElement('script');
-      script.src =
-        `https://maps.googleapis.com/maps/api/js?key=${environment.googleMapsAPIKey}`;
+      const script = document.createElement("script");
+      script.src = `https://maps.googleapis.com/maps/api/js?key=${environment.googleMapsAPIKey}`;
       script.async = true;
       script.defer = true;
       document.body.appendChild(script);
@@ -72,7 +79,7 @@ export class MapModalComponent implements OnInit, AfterViewInit {
         if (loadedGoogleModule && loadedGoogleModule.maps) {
           resolve(loadedGoogleModule.maps);
         } else {
-          reject('Google maps SDK not available.');
+          reject("Google maps SDK not available.");
         }
       };
     });
