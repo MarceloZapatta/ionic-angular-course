@@ -30,6 +30,8 @@
     <ion-row>
       <ion-col size-sm="6" offset-sm="3" no-padding>
         <ion-img
+          role="button"
+          (click)="onShowFullMap()"
           class="location-image"
           [src]="place.location.staticMapImageUrl"
         ></ion-img>
