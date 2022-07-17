@@ -11,8 +11,9 @@ import { environment } from "../../../../environments/environment";
 import { map, switchMap } from "rxjs/operators";
 import { Coordinates, PlaceLocation } from "src/app/places/location.model";
 import { of } from "rxjs";
-import { Geolocation } from "@capacitor/geolocation";
-import { Capacitor } from "@capacitor/core";
+import { Plugins, Capacitor } from "@capacitor/core";
+const { Geolocation } = Plugins;
+
 
 @Component({
   selector: "app-location-picker",
@@ -50,7 +51,7 @@ export class LocationPickerComponent implements OnInit {
           handler: () => {},
         },
       ],
-    });
+    }).then(actionSheetCtrl => actionSheetCtrl.present());
   }
 
   private locateUser() {
@@ -84,7 +85,7 @@ export class LocationPickerComponent implements OnInit {
       .then((alert) => alert.present());
   }
 
-  openMap() {
+  private openMap() {
     this.modalCtrl.create({ component: MapModalComponent }).then((modalEl) => {
       modalEl.onDidDismiss().then((modalData) => {
         if (!modalData.data) {
