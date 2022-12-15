@@ -12,6 +12,7 @@ import { ModalController } from "@ionic/angular";
 import { Coordinates } from "src/app/places/location.model";
 
 import { environment } from "../../../environments/environment";
+
 @Component({
   selector: "app-map-modal",
   templateUrl: "./map-modal.component.html",
