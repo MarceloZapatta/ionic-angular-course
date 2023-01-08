@@ -3,7 +3,8 @@ import { Router } from "@angular/router";
 import { NgForm } from "@angular/forms";
 import { AlertController, LoadingController } from "@ionic/angular";
 
-import { AuthService } from "./auth.service";
+import { AuthService, AuthResponseData } from "./auth.service";
+import { Observable } from "rxjs";
 
 @Component({
   selector: "app-auth",
@@ -25,14 +26,21 @@ export class AuthPage implements OnInit {
 
   authenticate(email: string, password: string) {
     this.isLoading = true;
-    this.authService.login();
+
     this.loadingCtrl
       .create({ keyboardClose: true, message: "Logging in..." })
       .then((loadingEl) => {
         loadingEl.present();
 
-        this.authService.signup(email, password).subscribe((resData) => {
-          console.log(resData);
+        let authObs: Observable<AuthResponseData>;
+
+        if (this.isLogin) {
+          authObs = this.authService.login(email, password);
+        } else {
+          authObs = this.authService.signup(email, password);
+        }
+
+        authObs.subscribe((resData) => {
           this.isLoading = false;
           loadingEl.dismiss();
           this.router.navigateByUrl("/places/tabs/discover");
@@ -41,8 +49,16 @@ export class AuthPage implements OnInit {
           const code = errorResponse.error.error.message;
           let message = 'Could not sign you up, please try again.';
           
-          if (code === 'EMAIL_EXISTS') {
-            message = 'This email already exists!';
+          switch (code) {
+            case 'EMAIL_EXISTS':
+              message = 'This email already exists!';
+              break;
+            case 'EMAIL_NOT_FOUND':
+              message = 'E-mail address could not be found.';
+              break;
+            case 'INVALID_PASSWORD':
+              message = 'Password invalid!';
+              break;
           }
 
           this.showAlert(message);
