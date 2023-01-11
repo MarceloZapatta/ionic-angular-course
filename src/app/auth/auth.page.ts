@@ -40,29 +40,32 @@ export class AuthPage implements OnInit {
           authObs = this.authService.signup(email, password);
         }
 
-        authObs.subscribe((resData) => {
-          this.isLoading = false;
-          loadingEl.dismiss();
-          this.router.navigateByUrl("/places/tabs/discover");
-        }, (errorResponse) => {
-          loadingEl.dismiss();
-          const code = errorResponse.error.error.message;
-          let message = 'Could not sign you up, please try again.';
-          
-          switch (code) {
-            case 'EMAIL_EXISTS':
-              message = 'This email already exists!';
-              break;
-            case 'EMAIL_NOT_FOUND':
-              message = 'E-mail address could not be found.';
-              break;
-            case 'INVALID_PASSWORD':
-              message = 'Password invalid!';
-              break;
-          }
+        authObs.subscribe(
+          (resData) => {
+            this.isLoading = false;
+            loadingEl.dismiss();
+            this.router.navigateByUrl("/places/tabs/discover");
+          },
+          (errorResponse) => {
+            loadingEl.dismiss();
+            const code = errorResponse.error.error.message;
+            let message = "Could not sign you up, please try again.";
 
-          this.showAlert(message);
-        });
+            switch (code) {
+              case "EMAIL_EXISTS":
+                message = "This email already exists!";
+                break;
+              case "EMAIL_NOT_FOUND":
+                message = "E-mail address could not be found.";
+                break;
+              case "INVALID_PASSWORD":
+                message = "Password invalid!";
+                break;
+            }
+
+            this.showAlert(message);
+          }
+        );
       });
   }
 
@@ -78,6 +81,7 @@ export class AuthPage implements OnInit {
     const password = form.value.password;
 
     this.authenticate(email, password);
+    form.reset();
   }
 
   private showAlert(message: string) {
