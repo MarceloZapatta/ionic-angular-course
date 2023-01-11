@@ -150,6 +150,12 @@ export class AuthService implements OnDestroy {
     Storage.set({ key: "authData", value: data });
   }
 
+  get token() {
+    return this._user
+      .asObservable()
+      .pipe(map((user) => (user && user.token ? user.token : null)));
+  }
+
   ngOnDestroy(): void {
     if (this.activeLogoutTimer) {
       clearTimeout(this.activeLogoutTimer);
